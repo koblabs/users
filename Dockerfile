@@ -1,0 +1,27 @@
+FROM python:3.11
+
+WORKDIR /users
+
+COPY ./pyproject.toml /users/
+
+RUN pip install --no-cache-dir --upgrade pip
+
+RUN pip install poetry
+
+RUN poetry self update
+
+RUN poetry install --no-dev
+
+COPY ./alembic.ini /users/
+
+COPY  ./.env.sample /users/.env
+
+COPY ./migrations /users/migrations
+
+COPY ./app /users/app
+
+
+ENTRYPOINT ["/bin/sh", "-c" , "poetry run alembic upgrade head && poetry run uvicorn app.main:app --host 0.0.0.0 --port 80"]
+
+# If running behind a proxy like Nginx or Traefik add --proxy-headers
+# ENTRYPOINT ["/bin/sh", "-c" , "poetry run alembic upgrade head && poetry run uvicorn app.main:app --host 0.0.0.0 --port 80", "--proxy-headers"]
