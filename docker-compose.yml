@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  database:
+    container_name: postgres
+    image: postgres:15.3
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@koblabs.com
+      PGADMIN_DEFAULT_PASSWORD: koblabs
+    depends_on:
+      - database
+    ports:
+      - 5050:80
+
+  web:
+    build: .
+    container_name: accountant
+    depends_on:
+      - database
+      - pgadmin
+    ports:
+      - "80:80"
+
+volumes:
+  db_data:

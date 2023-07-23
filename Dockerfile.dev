@@ -14,7 +14,7 @@ RUN poetry install --no-dev
 
 COPY ./alembic.ini /users/
 
-COPY  ./.env /users/.env
+COPY  ./.env.sample /users/.env
 
 COPY ./migrations /users/migrations
 
