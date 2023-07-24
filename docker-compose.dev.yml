@@ -26,16 +26,18 @@ services:
       - 5050:80
 
   web:
-    build: .
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
     container_name: users
     restart: always
     volumes:
-      - ./:/accountant
+      - ./app:/users/app
     depends_on:
       - database
       - pgadmin
     ports:
-      - "8080:80"
+      - "8000:80"
 
 volumes:
   db_data:
